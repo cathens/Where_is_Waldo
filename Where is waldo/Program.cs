@@ -21,7 +21,7 @@ namespace Where_is_waldo
 
 
             String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/temp.png";
+            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
 
             CvInvoke.NamedWindow(win1); //Create the window using the specific name
             /*
@@ -46,8 +46,8 @@ namespace Where_is_waldo
             CvInvoke.DestroyWindow(win1); //Destroy the window if key is pressed
             */
 
-            Image<Bgr, byte> source = new Image<Bgr, byte>(filepathB); // Image B
             Image<Bgr, byte> template = new Image<Bgr, byte>(filepathA); // Image A
+            Image<Bgr, byte> source = new Image<Bgr, byte>(filepathB); // Image B
             Image<Bgr, byte> imageToShow = source.Copy();
 
             //template = template.Resize(0.3, Inter.Linear);
