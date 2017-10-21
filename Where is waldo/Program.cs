@@ -22,14 +22,12 @@ namespace Where_is_waldo
 
 
 
-            String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/Pics/waldoblueactual1.png";
-            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/Pics/IMG_20212.png";
+            String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/Pics/waldoblue.png";
+            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/Pics/4.jpeg";
 
             CvInvoke.NamedWindow(win1, NamedWindowType.Normal); //Create the window using the specific name
             CvInvoke.NamedWindow(win2, NamedWindowType.Normal); //Create the window using the specific name
             CvInvoke.NamedWindow(win3, NamedWindowType.Normal); //Create the window using the specific name
-
-
 
             // Mat z = CvInvoke.Imread(filepathA, ImreadModes.Unchanged);
             // Image<Bgra, byte>  template1 = z.ToImage<Bgra, byte>();
@@ -51,9 +49,9 @@ namespace Where_is_waldo
                     //    ||())//Brown
                     if ((!(color.R > 150 && color.G < 90 && color.B < 90))//RED
                         && ((color.R > 60 && color.G > 60 && color.B > 60) || color.B - color.R > 20)//Black
-                            //&& (!(color.R > 210 && color.R < 230 && color.G > 187 && color.G < 203 && color.B > 170 && color.B < 190 && (color.R - color.B > 35) && (color.R - color.G > 20)))) { //Waldo face
-                            && !((color.R - color.B > 35) && (color.R - color.G > 20))){
-                bitmap.SetPixel(x1, y1, Color.Yellow);
+                            && (!(color.R > 210 && color.R < 230 && color.G > 187 && color.G < 203 && color.B > 170 && color.B < 190 && (color.R - color.B > 35) && (color.R - color.G > 20)))) { //Waldo face
+                           // if( !((color.R - color.B > 35) && (color.R - color.G > 20)))
+                              bitmap.SetPixel(x1, y1, Color.Yellow);
                     }
                 }
             }
@@ -65,9 +63,9 @@ namespace Where_is_waldo
             Point maxPoint = new Point();
             Size maxSize = new Size();
             
-            for (double x = .05;x<=.4;x+=0.1) {
+            for (double x = .2;x<=.8;x+=0.1) {
 
-                for (double y = .05; y <= .4; y += 0.1)
+                for (double y = .2; y <= .8; y += 0.1)
                 {
                     Image<Bgr, byte> template = template1.Resize((int)(template1.Width * x), (int)(template1.Height * y), Inter.Linear);
                     Console.WriteLine(x + " "+ y);
