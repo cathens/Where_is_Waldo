@@ -30,9 +30,9 @@ namespace Where_is_waldo
             Image<Bgr, byte> source = new Image<Bgr, byte>(filepathB); // Image B
             Image<Bgr, byte> imageToShow = source.Copy();
 
-            LinkedList<double> list = new LinkedList<double>();
-            LinkedList<Point> points = new LinkedList<Point>();
-            LinkedList<Size> size = new LinkedList<Size>();
+            double maxMatchValue = 0;
+            Point maxPoint = new Point();
+            Size maxSize = new Size();
 
             for (double x = .1;x<1;x+=0.1) {
                 Image<Bgr, byte> template = template1.Resize(x, Inter.Linear);
@@ -43,29 +43,19 @@ namespace Where_is_waldo
                     result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
 
                     // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
-                    if (maxValues[0] >= .9)
+                    if (maxValues[0] >= .9 && maxValues[0] > maxMatchValue)
                     {
                         // This is a match. Do something with it, for example draw a rectangle around it.
-                        list.AddFirst(maxValues[0]);
-                        points.AddFirst(maxLocations[0]);
-                        size.AddFirst(template.Size);
+                        maxMatchValue = maxValues[0];
+                        maxPoint = maxLocations[0];
+                        maxSize = template.Size;
 
-                        Console.WriteLine("" + maxValues[0]);
+                        Console.WriteLine("" + maxMatchValue);
                     }
                 }
             }
 
-            int i = 0;
-            double max = list.Max();
-            for(i = 0;i<list.Count;i++)
-            {
-                if (list.ToArray()[i] == max)
-                    break;
-            }
-
-
-
-            Rectangle match = new Rectangle(points.ToArray()[i], size.ToArray()[i]);
+            Rectangle match = new Rectangle(maxPoint, maxSize);
             imageToShow.Draw(match, new Bgr(Color.Red), 3);
             //ImageBox imageBox1 = new ImageBox();
 
