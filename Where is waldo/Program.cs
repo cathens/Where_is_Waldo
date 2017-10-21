@@ -17,65 +17,61 @@ namespace Where_is_waldo
         {
 
             String win1 = "Test Window"; //The name of the window
-            String filepathA = "C:/Users/claud/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            String filepathB = "C:/Users/claud/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            
-            CvInvoke.NamedWindow(win1); //Create the window using the specific name
-            /*
-            Mat img = new Mat(200, 400, DepthType.Cv8U, 3); //Create a 3 channel image of 400x200
-            img.SetTo(new Bgr(255, 0, 0).MCvScalar); // set it to Blue color
-
-            Mat im = CvInvoke.Imread("C:/Users/claud/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png");
-     
-
-            //Draw "Hello, world." on the image using the specific font
-            CvInvoke.PutText(
-               img,
-               "Hello, world",
-               new System.Drawing.Point(100,100),
-               FontFace.HersheyComplex,
-               1.0,
-               new Bgr(0, 255, 0).MCvScalar);
+            String win2 = "Template";
 
 
-            CvInvoke.Imshow(win1, im); //Show the image
-            CvInvoke.WaitKey(0);  //Wait for the key pressing event
-            CvInvoke.DestroyWindow(win1); //Destroy the window if key is pressed
-            */
+
+            String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/4.jpeg";
+
+            CvInvoke.NamedWindow(win1, NamedWindowType.Normal); //Create the window using the specific name
+            CvInvoke.NamedWindow(win2, NamedWindowType.Normal); //Create the window using the specific name
 
 
-            Image<Bgr, byte> source = new Image<Bgr, byte>(filepathB); // Image B
-            Image<Bgr, byte> template = new Image<Bgr, byte>(filepathA); // Image A
+            Mat z = CvInvoke.Imread(filepathA, ImreadModes.Unchanged);
+            Image<Bgra, byte>  template1 = z.ToImage<Bgra, byte>();
+           
+         //   Image<Bgra, byte> template1 = new Image<Bgra, byte>(filepathA); // Image A
+            Image<Bgra, byte> source = new Image<Bgra, byte>(filepathB); // Image B
+            Image<Bgra, byte> imageToShow = source.Copy();
 
-            Image<Bgr, byte> templateResize = new Image<Bgr, byte>(filepathA); // Image A
+            double maxMatchValue = 0;
+            Point maxPoint = new Point();
+            Size maxSize = new Size();
 
-            //CvInvoke.Resize(templateResize, templateResize, new Size(60, 50), 0, 0, Inter.Linear);
+            for (double x = .4;x<=1;x+=0.05) {
+                Image<Bgra, byte> template = template1.Resize(x, Inter.Linear);
 
-            /*<Bgr, byte> imageToShow = source.Copy();
-
-            using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.Ccoeff))
-            {
-                double[] minValues, maxValues;
-                Point[] minLocations, maxLocations;
-                result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
-
-                // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
-                if (maxValues[0] > 0.9)
+                using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.CcorrNormed))
                 {
-                    // This is a match. Do something with it, for example draw a rectangle around it.
-                    Rectangle match = new Rectangle(maxLocations[0], template.Size);
-                    imageToShow.Draw(match, new Bgr(Color.Red), 3);
-                }
-            }*/
+                    double[] minValues, maxValues;
+                    Point[] minLocations, maxLocations;
+                    result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
 
+                    // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
+                    if (maxValues[0] >= .7 && maxValues[0] > maxMatchValue)
+                    {
+                        // This is a match. Do something with it, for example draw a rectangle around it.
+                        maxMatchValue = maxValues[0];
+                        maxPoint = maxLocations[0];
+                        maxSize = template.Size;
+
+                        Console.WriteLine("" + maxMatchValue+ " "+x);
+                        CvInvoke.Imshow(win2, template);
+                    }
+                }
+            }
+
+            Rectangle match = new Rectangle(maxPoint, maxSize);
+            imageToShow.Draw(match, new Bgra(0,0,255,255), 3);
             //ImageBox imageBox1 = new ImageBox();
 
             // Show imageToShow in an ImageBox (here assumed to be called imageBox1)
             //imageBox1.Image = imageToShow;
 
-            //CvInvoke.Imshow(win1, imageToShow); //Show the image
 
-            CvInvoke.Imshow(win1, templateResize);
+            //imageToShow = imageToShow.Resize(.5, Inter.Linear);
+            CvInvoke.Imshow(win1, imageToShow); //Show the image
             CvInvoke.WaitKey(0);
             CvInvoke.DestroyWindow(win1);
         }
