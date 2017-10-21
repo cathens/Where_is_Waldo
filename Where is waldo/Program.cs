@@ -18,9 +18,9 @@ namespace Where_is_waldo
 
             String win1 = "Test Window"; //The name of the window
 
-            
 
-            String filepathA = "C:/Users/"+ Environment.UserName.ToString()+ "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+
+            String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
             String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
 
             CvInvoke.NamedWindow(win1); //Create the window using the specific name
