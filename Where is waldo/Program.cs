@@ -17,11 +17,11 @@ namespace Where_is_waldo
         {
 
             String win1 = "Test Window"; //The name of the window
-            String filepathA = "C:/Users/claud/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            String filepathB = "C:/Users/claud/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            /*
+            String filepathA = "C:/Users/benth/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+            String filepathB = "C:/Users/benth/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+            
             CvInvoke.NamedWindow(win1); //Create the window using the specific name
-
+            /*
             Mat img = new Mat(200, 400, DepthType.Cv8U, 3); //Create a 3 channel image of 400x200
             img.SetTo(new Bgr(255, 0, 0).MCvScalar); // set it to Blue color
 
@@ -69,6 +69,8 @@ namespace Where_is_waldo
             //imageBox1.Image = imageToShow;
 
             CvInvoke.Imshow(win1, imageToShow); //Show the image
+            CvInvoke.WaitKey(0);
+            CvInvoke.DestroyWindow(win1);
         }
     }
 }
