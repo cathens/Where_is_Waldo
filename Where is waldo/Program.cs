@@ -17,9 +17,12 @@ namespace Where_is_waldo
         {
 
             String win1 = "Test Window"; //The name of the window
-            String filepathA = "C:/Users/benth/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
-            String filepathB = "C:/Users/benth/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+
             
+
+            String filepathA = "C:/Users/"+ Environment.UserName.ToString()+ "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+            String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/waldo.png";
+
             CvInvoke.NamedWindow(win1); //Create the window using the specific name
             /*
             Mat img = new Mat(200, 400, DepthType.Cv8U, 3); //Create a 3 channel image of 400x200
@@ -43,10 +46,10 @@ namespace Where_is_waldo
             CvInvoke.DestroyWindow(win1); //Destroy the window if key is pressed
             */
 
-
             Image<Bgr, byte> source = new Image<Bgr, byte>(filepathB); // Image B
             Image<Bgr, byte> template = new Image<Bgr, byte>(filepathA); // Image A
             Image<Bgr, byte> imageToShow = source.Copy();
+
 
             using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.Ccoeff))
             {
@@ -55,7 +58,7 @@ namespace Where_is_waldo
                 result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
 
                 // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
-                if (maxValues[0] > 0.9)
+                if (maxValues[0] >= 0.9)
                 {
                     // This is a match. Do something with it, for example draw a rectangle around it.
                     Rectangle match = new Rectangle(maxLocations[0], template.Size);
