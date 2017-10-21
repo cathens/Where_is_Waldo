@@ -23,7 +23,7 @@ namespace Where_is_waldo
             String filepathA = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/11.png";
             String filepathB = "C:/Users/" + Environment.UserName.ToString() + "/Source/Repos/Where_is_Waldo/Where is waldo/4.jpeg";
 
-            CvInvoke.NamedWindow(win1); //Create the window using the specific name
+            CvInvoke.NamedWindow(win1, NamedWindowType.Normal); //Create the window using the specific name
 
 
             Image<Bgr, byte> template1 = new Image<Bgr, byte>(filepathA); // Image A
@@ -32,10 +32,10 @@ namespace Where_is_waldo
 
             LinkedList<double> list = new LinkedList<double>();
             LinkedList<Point> points = new LinkedList<Point>();
-            LinkedList<double> size = new LinkedList<double>();
+            LinkedList<Size> size = new LinkedList<Size>();
 
-            for (double i = .1;i<1;i+=0.1) {
-                Image<Bgr, byte> template = template1.Resize(i, Inter.Linear);
+            for (double x = .1;x<1;x+=0.1) {
+                Image<Bgr, byte> template = template1.Resize(x, Inter.Linear);
                 using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.Ccoeff))
                 {
                     double[] minValues, maxValues;
@@ -43,24 +43,29 @@ namespace Where_is_waldo
                     result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
 
                     // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
-                    if (maxValues[0] >= 0)
+                    if (maxValues[0] >= .9)
                     {
                         // This is a match. Do something with it, for example draw a rectangle around it.
                         list.AddFirst(maxValues[0]);
                         points.AddFirst(maxLocations[0]);
+                        size.AddFirst(template.Size);
 
                         Console.WriteLine("" + maxValues[0]);
                     }
                 }
             }
 
-            for(double e: list)
+            int i = 0;
+            double max = list.Max();
+            for(i = 0;i<list.Count;i++)
             {
-
+                if (list.ToArray()[i] == max)
+                    break;
             }
 
 
-            Rectangle match = new Rectangle(maxLocations[0], template.Size);
+
+            Rectangle match = new Rectangle(points.ToArray()[i], size.ToArray()[i]);
             imageToShow.Draw(match, new Bgr(Color.Red), 3);
             //ImageBox imageBox1 = new ImageBox();
 
@@ -68,7 +73,7 @@ namespace Where_is_waldo
             //imageBox1.Image = imageToShow;
 
 
-            imageToShow = imageToShow.Resize(.5, Inter.Linear);
+            //imageToShow = imageToShow.Resize(.5, Inter.Linear);
             CvInvoke.Imshow(win1, imageToShow); //Show the image
             CvInvoke.WaitKey(0);
             CvInvoke.DestroyWindow(win1);
