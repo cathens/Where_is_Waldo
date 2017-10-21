@@ -28,10 +28,10 @@ namespace Where_is_waldo
             CvInvoke.NamedWindow(win2, NamedWindowType.Normal); //Create the window using the specific name
 
 
-            Mat z = CvInvoke.Imread(filepathA, ImreadModes.Unchanged);
-            Image<Bgra, byte>  template1 = z.ToImage<Bgra, byte>();
+           // Mat z = CvInvoke.Imread(filepathA, ImreadModes.Unchanged);
+           // Image<Bgra, byte>  template1 = z.ToImage<Bgra, byte>();
            
-         //   Image<Bgra, byte> template1 = new Image<Bgra, byte>(filepathA); // Image A
+            Image<Bgra, byte> template1 = new Image<Bgra, byte>(filepathA); // Image A
             Image<Bgra, byte> source = new Image<Bgra, byte>(filepathB); // Image B
             Image<Bgra, byte> imageToShow = source.Copy();
 
@@ -39,25 +39,32 @@ namespace Where_is_waldo
             Point maxPoint = new Point();
             Size maxSize = new Size();
 
-            for (double x = .4;x<=1;x+=0.05) {
-                Image<Bgra, byte> template = template1.Resize(x, Inter.Linear);
+            for (double x = .1;x<=1;x+=0.1) {
 
-                using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.CcorrNormed))
+                for (double y = .1; y <= 1; y += 0.1)
                 {
-                    double[] minValues, maxValues;
-                    Point[] minLocations, maxLocations;
-                    result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
+                    Image<Bgra, byte> template = template1.Resize((int)(template1.Width * x), (int)(template1.Height * y), Inter.Linear);
+                    Console.WriteLine(x + " "+ y);
 
-                    // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
-                    if (maxValues[0] >= .7 && maxValues[0] > maxMatchValue)
+                    using (Image<Gray, float> result = source.MatchTemplate(template, TemplateMatchingType.CcorrNormed))
                     {
-                        // This is a match. Do something with it, for example draw a rectangle around it.
-                        maxMatchValue = maxValues[0];
-                        maxPoint = maxLocations[0];
-                        maxSize = template.Size;
+                        double[] minValues, maxValues;
+                        Point[] minLocations, maxLocations;
+                        result.MinMax(out minValues, out maxValues, out minLocations, out maxLocations);
 
-                        Console.WriteLine("" + maxMatchValue+ " "+x);
-                        CvInvoke.Imshow(win2, template);
+                        Console.WriteLine(maxValues[0]);
+
+                        // You can try different values of the threshold. I guess somewhere between 0.75 and 0.95 would be good.
+                        if (maxValues[0] >= .7 && maxValues[0] > maxMatchValue)
+                        {
+                            // This is a match. Do something with it, for example draw a rectangle around it.
+                            maxMatchValue = maxValues[0];
+                            maxPoint = maxLocations[0];
+                            maxSize = template.Size;
+                            
+                            Console.WriteLine("" + maxMatchValue + " " + x + " " + y);
+                            CvInvoke.Imshow(win2, template);
+                        }
                     }
                 }
             }
