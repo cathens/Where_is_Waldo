@@ -10,7 +10,8 @@ namespace Where_is_waldo
     {
         static void Main(string[] args)
         {
-            ;
+            
+            Console.ReadLine();
         
         }
     }
